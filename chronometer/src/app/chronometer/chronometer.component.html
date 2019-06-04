@@ -1,0 +1,17 @@
+<div class="status">Status: {{ running ? 'Running' : 'Stopped' }}</div>
+<div class="numbers">
+  <span class="minutes">{{ minutes | number: '2.0-0' }}:</span>
+  <span class="seconds">{{ seconds | number: '2.0-0' }}</span>
+  <span class="decis">.{{ decis }}</span>
+</div>
+<div class="actions">
+  <button class="btn start" [class.disabled]="running" (click)="handleStartClick()">Start</button>
+  <button class="btn stop" [class.disabled]="!running" (click)="handleStopClick()">Stop</button>
+  <button
+    class="btn reset"
+    [class.disabled]="minutes === 0 && seconds === 0 && decis === 0"
+    (click)="handleResetClick()"
+  >
+    Reset
+  </button>
+</div>
