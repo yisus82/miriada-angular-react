@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { tick } from '@angular/core/testing';
 
 @Component({
   selector: 'app-chronometer',
@@ -11,7 +10,7 @@ export class ChronometerComponent implements OnInit {
   seconds: number;
   decis: number;
   running: boolean;
-  interval: NodeJS.Timer;
+  interval: number;
 
   constructor() {
     this.minutes = 0;
@@ -24,7 +23,7 @@ export class ChronometerComponent implements OnInit {
 
   handleStartClick() {
     if (!this.running) {
-      this.interval = setInterval(() => this.tick(), 100);
+      this.interval = window.setInterval(() => this.tick(), 100);
       this.running = true;
     }
   }
