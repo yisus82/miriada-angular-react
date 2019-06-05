@@ -1,0 +1,9 @@
+<button
+  [class.disabled]="
+    (stateService.state$ | async).values[row][column] !== '-' ||
+    (stateService.state$ | async).winner !== ''
+  "
+  (click)="handleClick()"
+>
+  {{ (stateService.state$ | async).values[row][column] }}
+</button>

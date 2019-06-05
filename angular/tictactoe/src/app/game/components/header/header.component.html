@@ -1,0 +1,9 @@
+<span [ngSwitch]="(stateService.state$ | async).winner">
+  <p *ngSwitchCase="'PLAYERX'"><strong>Winner:</strong> Player 1 (X)</p>
+  <p *ngSwitchCase="'PLAYERO'"><strong>Winner:</strong> Player 2 (O)</p>
+  <p *ngSwitchCase="'TIE'"><strong>Winner:</strong> Tie</p>
+</span>
+<p *ngIf="(stateService.state$ | async).winner === ''">
+  <strong>Turn:</strong>
+  {{ (stateService.state$ | async).turn === 'PLAYERX' ? 'Player 1 (X)' : 'Player 2 (O)' }}
+</p>
