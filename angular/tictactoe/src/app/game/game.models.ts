@@ -3,4 +3,5 @@ export interface State {
   values: string[][];
   numberMovements: number;
   winner: string;
+  playerName: string;
 }

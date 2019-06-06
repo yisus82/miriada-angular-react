@@ -1,3 +1,16 @@
-<app-header></app-header>
-<app-board></app-board>
-<app-footer></app-footer>
+<div class="loader" *ngIf="status === 'fetching'"></div>
+<div *ngIf="status === 'success'">
+  <form *ngIf="(stateService.state$ | async).playerName === ''">
+    <input type="text" name="playerName" placeholder="Player Name" [(ngModel)]="playerName" />
+    <button type="submit" (click)="handleSubmitClick()">Submit</button>
+  </form>
+
+  <div *ngIf="(stateService.state$ | async).playerName !== ''">
+    <app-header></app-header>
+    <app-board></app-board>
+    <app-footer></app-footer>
+  </div>
+</div>
+<h3 *ngIf="status !== 'success' && status !== 'fetching'">
+  Error getting state from server. The error was: {{ status }}
+</h3>

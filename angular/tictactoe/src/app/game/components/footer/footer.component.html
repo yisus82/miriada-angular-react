@@ -1,2 +1,8 @@
 <p><strong>Number of movements:</strong> {{ (stateService.state$ | async).numberMovements }}</p>
-<button (click)="resetGame()">Reset game</button>
+<button
+  class="btn"
+  [class.disabled]="(stateService.state$ | async).numberMovements === 0"
+  (click)="resetGame()"
+>
+  Reset game
+</button>

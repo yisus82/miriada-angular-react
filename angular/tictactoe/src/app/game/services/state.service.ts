@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { State } from '../game.models';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class StateService {
       turn: 'PLAYERX',
       values: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
       numberMovements: 0,
-      winner: ''
+      winner: '',
+      playerName: ''
     };
 
     this.state$ = new BehaviorSubject(initialState);
@@ -40,12 +42,15 @@ export class StateService {
   }
 
   reset() {
-    this.state = {
-      turn: 'PLAYERX',
-      values: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
-      numberMovements: 0,
-      winner: ''
-    };
+    if (this.state.numberMovements !== 0) {
+      this.state = {
+        turn: 'PLAYERX',
+        values: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
+        numberMovements: 0,
+        winner: '',
+        playerName: ''
+      };
+    }
   }
 
   checkWinner(): string {

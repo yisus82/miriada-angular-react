@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StateService } from '../../services/state.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-footer',
@@ -7,15 +8,12 @@ import { StateService } from '../../services/state.service';
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent implements OnInit {
-  stateService: StateService;
-
-  constructor(stateService: StateService) {
-    this.stateService = stateService;
-  }
+  constructor(private stateService: StateService, private router: Router) {}
 
   ngOnInit() {}
 
   resetGame() {
     this.stateService.reset();
+    this.router.navigate(['new']);
   }
 }

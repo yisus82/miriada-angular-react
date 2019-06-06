@@ -1,0 +1,15 @@
+div {
+  background: #676470;
+  color: #fff;
+  font-family: Lato;
+  font-size: 2em;
+  font-weight: 900;
+  margin: 1rem auto;
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+div:hover {
+  background: #0168b3;
+}
