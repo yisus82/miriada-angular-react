@@ -1,0 +1,16 @@
+.square {
+  background-color: #78bec5;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 50px;
+  height: 15vh;
+  margin: 1vw;
+  max-height: 100px;
+  max-width: 100px;
+  outline: none;
+  width: 25vw;
+}
+
+.square.disabled {
+  cursor: not-allowed;
+}
