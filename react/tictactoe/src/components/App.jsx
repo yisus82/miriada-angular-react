@@ -1,121 +1,51 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { playPosition, resetGame } from './../reducers/actions';
 import '../assets/styles/App.css';
-import Header from './Header.jsx';
-import Board from './Board.jsx';
+import Header from './Header';
+import Board from './Board';
 import Footer from './Footer';
 
-const PLAYERX = 'Player 1 (X)';
-const PLAYERO = 'Player 2 (O)';
-
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      turn: PLAYERX,
-      values: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
-      numberMovements: 0,
-      winner: ''
-    };
-  }
-
+class App extends React.Component {
   handleSquareClick = (rowNumber, columnNumber) => {
-    let newValues = [...this.state.values];
-    newValues[rowNumber][columnNumber] = this.state.turn === PLAYERX ? 'X' : 'O';
-    const newNumberMovements = this.state.numberMovements + 1;
-    const newWinner = this.checkWinner();
-    this.setState({
-      turn: this.state.turn === PLAYERX ? PLAYERO : PLAYERX,
-      values: newValues,
-      numberMovements: newNumberMovements,
-      winner: newWinner
-    });
-  };
-
-  checkWinner = () => {
-    if (
-      (this.state.values[0][0] === 'X' &&
-        this.state.values[0][1] === 'X' &&
-        this.state.values[0][2] === 'X') ||
-      (this.state.values[1][0] === 'X' &&
-        this.state.values[1][1] === 'X' &&
-        this.state.values[1][2] === 'X') ||
-      (this.state.values[2][0] === 'X' &&
-        this.state.values[2][1] === 'X' &&
-        this.state.values[2][2] === 'X') ||
-      (this.state.values[0][0] === 'X' &&
-        this.state.values[1][0] === 'X' &&
-        this.state.values[2][0] === 'X') ||
-      (this.state.values[0][1] === 'X' &&
-        this.state.values[1][1] === 'X' &&
-        this.state.values[2][1] === 'X') ||
-      (this.state.values[0][2] === 'X' &&
-        this.state.values[1][2] === 'X' &&
-        this.state.values[2][2] === 'X') ||
-      (this.state.values[0][0] === 'X' &&
-        this.state.values[1][1] === 'X' &&
-        this.state.values[2][2] === 'X') ||
-      (this.state.values[0][2] === 'X' &&
-        this.state.values[1][1] === 'X' &&
-        this.state.values[2][0] === 'X')
-    ) {
-      return PLAYERX;
-    } else if (
-      (this.state.values[0][0] === 'O' &&
-        this.state.values[0][1] === 'O' &&
-        this.state.values[0][2] === 'O') ||
-      (this.state.values[1][0] === 'O' &&
-        this.state.values[1][1] === 'O' &&
-        this.state.values[1][2] === 'O') ||
-      (this.state.values[2][0] === 'O' &&
-        this.state.values[2][1] === 'O' &&
-        this.state.values[2][2] === 'O') ||
-      (this.state.values[0][0] === 'O' &&
-        this.state.values[1][0] === 'O' &&
-        this.state.values[2][0] === 'O') ||
-      (this.state.values[0][1] === 'O' &&
-        this.state.values[1][1] === 'O' &&
-        this.state.values[2][1] === 'O') ||
-      (this.state.values[0][2] === 'O' &&
-        this.state.values[1][2] === 'O' &&
-        this.state.values[2][2] === 'O') ||
-      (this.state.values[0][0] === 'O' &&
-        this.state.values[1][1] === 'O' &&
-        this.state.values[2][2] === 'O') ||
-      (this.state.values[0][2] === 'O' &&
-        this.state.values[1][1] === 'O' &&
-        this.state.values[2][0] === 'O')
-    ) {
-      return PLAYERO;
-    }
-    if (this.state.numberMovements === 8) {
-      return 'TIE';
-    }
-    return '';
+    this.props.dispatch(
+      playPosition(
+        rowNumber,
+        columnNumber,
+        this.props.turn,
+        this.props.values,
+        this.props.numberMovements,
+        this.props.winner
+      )
+    );
   };
 
   resetGame = () => {
-    if (this.state.numberMovements !== 0) {
-      this.setState({
-        turn: PLAYERX,
-        values: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
-        numberMovements: 0,
-        winner: ''
-      });
-    }
+    this.props.dispatch(resetGame());
   };
 
   render() {
     return (
       <div>
         <h1>Welcome to Tic Tac Toe!</h1>
-        <Header winner={this.state.winner} turn={this.state.turn} />
+        <Header winner={this.props.winner} turn={this.props.turn} />
         <Board
-          winner={this.state.winner}
-          values={this.state.values}
+          winner={this.props.winner}
+          values={this.props.values}
           handleSquareClick={this.handleSquareClick}
         />
-        <Footer numberMovements={this.state.numberMovements} resetGame={this.resetGame} />
+        <Footer numberMovements={this.props.numberMovements} resetGame={this.resetGame} />
       </div>
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    values: state.values,
+    turn: state.turn,
+    numberMovements: state.numberMovements,
+    winner: state.winner
+  };
+}
+export default connect(mapStateToProps)(App);
