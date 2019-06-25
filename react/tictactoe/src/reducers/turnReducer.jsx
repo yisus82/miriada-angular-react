@@ -6,6 +6,8 @@ function turnReducer(state = PLAYERX, action) {
       return action.turn === PLAYERX ? PLAYERO : PLAYERX;
     case 'RESET_GAME':
       return PLAYERX;
+    case 'FETCH_STATE_SUCCESS':
+      return action.state.turn;
     default:
       return state;
   }

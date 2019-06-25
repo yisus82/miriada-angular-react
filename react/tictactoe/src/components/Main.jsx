@@ -6,8 +6,8 @@ import Home from './Home';
 const Main = props => (
   <Switch>
     <Route exact path="/" component={Home} />
-    <Route path="/new" component={Game} />
-    <Route path="/continue" component={Game} />
+    <Route key="new" path="/new" component={Game} />
+    <Route key="continue" path="/continue" render={() => <Game continue />} />
   </Switch>
 );
 

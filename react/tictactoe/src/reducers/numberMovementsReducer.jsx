@@ -4,6 +4,8 @@ function numberMovementsReducer(state = 0, action) {
       return state + 1;
     case 'RESET_GAME':
       return 0;
+    case 'FETCH_STATE_SUCCESS':
+      return action.state.numberMovements;
     default:
       return state;
   }

@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { createBrowserHistory } from 'history';
 import { ConnectedRouter, routerMiddleware } from 'connected-react-router';
+import thunk from 'redux-thunk';
 import { PLAYERX, VALUES } from '../constants/constants';
 import createRootReducer from '../reducers/reducers';
 import NavBar from './NavBar';
@@ -22,14 +23,14 @@ export default class ReduxProvider extends React.Component {
     this.store = createStore(
       createRootReducer(history),
       this.initialState,
-      compose(applyMiddleware(routerMiddleware(history)))
+      compose(applyMiddleware(routerMiddleware(history), thunk))
     );
   }
   render() {
     return (
       <Provider store={this.store}>
         <ConnectedRouter history={history}>
-          <div style={{ minHeight: '100vh' }}>
+          <div style={{ height: '100%', width: '100%' }}>
             <NavBar />
             <Main />
           </div>

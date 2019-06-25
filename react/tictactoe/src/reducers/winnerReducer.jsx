@@ -37,6 +37,8 @@ function winnerReducer(state = '', action) {
       return '';
     case 'RESET_GAME':
       return '';
+    case 'FETCH_STATE_SUCCESS':
+      return action.state.winner;
     default:
       return state;
   }
