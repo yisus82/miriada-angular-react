@@ -1,9 +1,14 @@
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
 import React from 'react';
+import { Provider } from 'react-redux';
+import { createStore, compose, applyMiddleware } from 'redux';
+import { createBrowserHistory } from 'history';
+import { ConnectedRouter, routerMiddleware } from 'connected-react-router';
 import { PLAYERX, VALUES } from '../constants/constants';
-import GlobalState from '../reducers/reducers';
-import App from './App';
+import createRootReducer from '../reducers/reducers';
+import NavBar from './NavBar';
+import Main from './Main';
+
+const history = createBrowserHistory();
 
 export default class ReduxProvider extends React.Component {
   constructor(props) {
@@ -14,14 +19,21 @@ export default class ReduxProvider extends React.Component {
       numberMovements: 0,
       winner: ''
     };
-    this.store = createStore(GlobalState, this.initialState);
+    this.store = createStore(
+      createRootReducer(history),
+      this.initialState,
+      compose(applyMiddleware(routerMiddleware(history)))
+    );
   }
   render() {
     return (
       <Provider store={this.store}>
-        <div style={{ minHeight: '100vh' }}>
-          <App />
-        </div>
+        <ConnectedRouter history={history}>
+          <div style={{ minHeight: '100vh' }}>
+            <NavBar />
+            <Main />
+          </div>
+        </ConnectedRouter>
       </Provider>
     );
   }

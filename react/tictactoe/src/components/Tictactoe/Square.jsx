@@ -1,5 +1,5 @@
 import React from 'react';
-import '../assets/styles/Square.css';
+import '../../assets/styles/Square.css';
 
 const Square = props => (
   <button

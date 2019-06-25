@@ -1,6 +1,6 @@
 import React from 'react';
 import Square from './Square';
-import '../assets/styles/Board.css';
+import '../../assets/styles/Board.css';
 
 const Board = props => {
   const board = props.values.map((rowValues, rowIndex) => {

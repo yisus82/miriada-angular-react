@@ -1,8 +1,8 @@
 import React from 'react';
-import '../assets/styles/Header.css';
+import '../../assets/styles/Header.css';
 
 const Header = props => (
-  <header>
+  <header className="game">
     <strong>{props.winner ? 'Winner:' : 'Turn:'} </strong> {props.winner || props.turn}
   </header>
 );
