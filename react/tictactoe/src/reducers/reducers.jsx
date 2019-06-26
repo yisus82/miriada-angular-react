@@ -5,6 +5,7 @@ import turnReducer from './turnReducer';
 import numberMovementsReducer from './numberMovementsReducer';
 import winnerReducer from './winnerReducer';
 import fetchReducer from './fetchReducer';
+import playerNameReducer from './playerNameReducer';
 
 export default history =>
   combineReducers({
@@ -13,5 +14,6 @@ export default history =>
     values: gameReducer,
     numberMovements: numberMovementsReducer,
     winner: winnerReducer,
-    fetch: fetchReducer
+    fetch: fetchReducer,
+    playerName: playerNameReducer
   });

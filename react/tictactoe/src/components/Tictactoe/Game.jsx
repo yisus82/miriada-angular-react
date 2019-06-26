@@ -1,14 +1,29 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { playPosition, resetGame, fetchState } from '../../reducers/actions';
+import { playPosition, resetGame, fetchState, newPlayer } from '../../reducers/actions';
 import '../../assets/styles/Game.css';
 import Header from './Header';
 import Board from './Board';
 import Footer from './Footer';
 
 class Game extends React.Component {
-  redirect = false;
+  constructor(props) {
+    super(props);
+    this.redirect = false;
+    this.state = {
+      playerName: ''
+    };
+  }
+
+  handlePlayerInputChange = event => {
+    this.setState({ playerName: event.target.value });
+  };
+
+  handlePlayerSubmit = event => {
+    event.preventDefault();
+    this.props.dispatch(newPlayer(this.state.playerName));
+  };
 
   handleSquareClick = (rowNumber, columnNumber) => {
     this.props.dispatch(
@@ -51,17 +66,38 @@ class Game extends React.Component {
         </div>
       );
     } else {
-      return (
-        <div>
-          <Header winner={this.props.winner} turn={this.props.turn} />
-          <Board
-            winner={this.props.winner}
-            values={this.props.values}
-            handleSquareClick={this.handleSquareClick}
-          />
-          <Footer numberMovements={this.props.numberMovements} resetGame={this.resetGame} />
-        </div>
-      );
+      if (this.props.playerName !== '') {
+        return (
+          <div>
+            <Header
+              playerName={this.props.playerName}
+              winner={this.props.winner}
+              turn={this.props.turn}
+            />
+            <Board
+              winner={this.props.winner}
+              values={this.props.values}
+              handleSquareClick={this.handleSquareClick}
+            />
+            <Footer numberMovements={this.props.numberMovements} resetGame={this.resetGame} />
+          </div>
+        );
+      } else {
+        return (
+          <header className="game">
+            <form onSubmit={this.handlePlayerSubmit}>
+              <input
+                type="text"
+                placeholder="Player Name"
+                name="name"
+                value={this.state.playerName}
+                onChange={this.handlePlayerInputChange}
+              />
+              <button type="submit">Submit</button>
+            </form>
+          </header>
+        );
+      }
     }
   }
 }
@@ -72,6 +108,7 @@ function mapStateToProps(state) {
     turn: state.turn,
     numberMovements: state.numberMovements,
     winner: state.winner,
+    playerName: state.playerName,
     fetch: state.fetch
   };
 }

@@ -46,7 +46,14 @@ export function fetchStateSuccess(json_received) {
 export function fetchStateFailure(error) {
   return {
     type: 'FETCH_STATE_FAILURE',
-    error: error
+    error
+  };
+}
+
+export function newPlayer(playerName) {
+  return {
+    type: 'NEW_PLAYER',
+    playerName
   };
 }
 
