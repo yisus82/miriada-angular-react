@@ -16,11 +16,12 @@ export function resetGame() {
   return { type: 'RESET_GAME' };
 }
 
-export function fetchState() {
+export function fetchState(url) {
+  const fetchUrl = url || API;
   return async dispatch => {
     dispatch(fetchStateBegin());
     try {
-      const response = await fetch(API);
+      const response = await fetch(fetchUrl);
       const res = await handleErrors(response);
       const json = await res.json();
       dispatch(fetchStateSuccess(json));
@@ -54,6 +55,51 @@ export function newPlayer(playerName) {
   return {
     type: 'NEW_PLAYER',
     playerName
+  };
+}
+
+export function saveGame(gameName, gameInfo) {
+  return async dispatch => {
+    try {
+      const options = {
+        method: 'POST',
+        body: JSON.stringify(gameInfo),
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      };
+      const response = await fetch('https://api.myjson.com/bins', options);
+      const res = await handleErrors(response);
+      const json = await res.json();
+      dispatch(saveGameSuccess(gameName, json));
+      return json;
+    } catch (error) {
+      console.log(error);
+      return dispatch(saveGameFailure(error));
+    }
+  };
+}
+
+export function saveGameSuccess(gameName, jsonReceived) {
+  return {
+    type: 'SAVE_GAME_SUCCESS',
+    gameName,
+    response: jsonReceived
+  };
+}
+
+export function saveGameFailure(error) {
+  return {
+    type: 'SAVE_GAME_FAILURE',
+    error
+  };
+}
+
+export function deleteGame(id, savedGames) {
+  return {
+    type: 'DELETE_GAME',
+    id,
+    savedGames
   };
 }
 

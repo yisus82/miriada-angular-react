@@ -12,8 +12,9 @@ const NavBar = props => (
       <NavLink exact to="/new">
         New Game
       </NavLink>
-      <NavLink exact to="/continue">
-        Continue
+      <NavLink to="/continue">Continue</NavLink>
+      <NavLink exact to="/games">
+        Saved Games
       </NavLink>
     </nav>
   </header>

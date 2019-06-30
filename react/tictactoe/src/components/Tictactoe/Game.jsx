@@ -1,7 +1,7 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { playPosition, resetGame, fetchState, newPlayer } from '../../reducers/actions';
+import { withRouter } from 'react-router-dom';
+import { playPosition, resetGame, fetchState, newPlayer, saveGame } from '../../reducers/actions';
 import '../../assets/styles/Game.css';
 import Header from './Header';
 import Board from './Board';
@@ -12,7 +12,8 @@ class Game extends React.Component {
     super(props);
     this.redirect = false;
     this.state = {
-      playerName: ''
+      playerName: '',
+      gameName: ''
     };
   }
 
@@ -22,7 +23,20 @@ class Game extends React.Component {
 
   handlePlayerSubmit = event => {
     event.preventDefault();
-    this.props.dispatch(newPlayer(this.state.playerName));
+    const playerName = this.state.playerName;
+    this.setState({ playerName: '' });
+    this.props.dispatch(newPlayer(playerName));
+  };
+
+  handleGameNameInputChange = event => {
+    this.setState({ gameName: event.target.value });
+  };
+
+  handleGameNameSubmit = event => {
+    event.preventDefault();
+    const gameName = this.state.gameName;
+    this.setState({ gameName: '' });
+    this.saveGame(gameName);
   };
 
   handleSquareClick = (rowNumber, columnNumber) => {
@@ -40,22 +54,39 @@ class Game extends React.Component {
 
   resetGame = () => {
     this.props.dispatch(resetGame());
-    this.redirect = true;
+    this.props.history.push('/new');
+  };
+
+  saveGame = gameName => {
+    const gameInfo = {
+      turn: this.props.turn,
+      values: this.props.values,
+      numberMovements: this.props.numberMovements,
+      winner: this.props.winner,
+      playerName: this.props.playerName
+    };
+    this.props.dispatch(saveGame(gameName, gameInfo));
   };
 
   componentDidMount() {
-    if (this.props.continue) {
-      this.props.dispatch(fetchState());
+    if (this.props.continue || (this.props.match && this.props.match.params.id)) {
+      if (this.props.match && this.props.match.params.id) {
+        const id = Number(this.props.match.params.id);
+        const savedGame = this.props.savedGames.find(game => game.id === id);
+        if (savedGame) {
+          this.props.dispatch(fetchState(savedGame.url));
+        } else {
+          this.resetGame();
+        }
+      } else {
+        this.props.dispatch(fetchState(this.props.lastSavedGameUrl || ''));
+      }
     } else {
       this.resetGame();
     }
   }
 
   render() {
-    if (this.redirect) {
-      this.redirect = false;
-      return <Redirect to="/new" />;
-    }
     if (this.props.continue && this.props.fetch.fetching) {
       return <div className="game">Loading the saved game...</div>;
     } else if (this.props.continue && !this.props.fetch.fetching && this.props.fetch.error) {
@@ -79,7 +110,13 @@ class Game extends React.Component {
               values={this.props.values}
               handleSquareClick={this.handleSquareClick}
             />
-            <Footer numberMovements={this.props.numberMovements} resetGame={this.resetGame} />
+            <Footer
+              handleGameNameSubmit={this.handleGameNameSubmit}
+              handleGameNameInputChange={this.handleGameNameInputChange}
+              gameName={this.state.gameName}
+              numberMovements={this.props.numberMovements}
+              resetGame={this.resetGame}
+            />
           </div>
         );
       } else {
@@ -109,7 +146,9 @@ function mapStateToProps(state) {
     numberMovements: state.numberMovements,
     winner: state.winner,
     playerName: state.playerName,
-    fetch: state.fetch
+    fetch: state.fetch,
+    lastSavedGameUrl: state.lastSavedGameUrl,
+    savedGames: state.savedGames
   };
 }
-export default connect(mapStateToProps)(Game);
+export default withRouter(connect(mapStateToProps)(Game));

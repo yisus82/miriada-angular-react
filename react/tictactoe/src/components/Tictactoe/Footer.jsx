@@ -12,6 +12,16 @@ const Footer = props => (
     >
       Reset game
     </button>
+    <form onSubmit={props.handleGameNameSubmit}>
+      <input
+        type="text"
+        placeholder="Game Name"
+        name="gameName"
+        value={props.gameName}
+        onChange={props.handleGameNameInputChange}
+      />
+      <button type="submit">Submit</button>
+    </form>
   </footer>
 );
 

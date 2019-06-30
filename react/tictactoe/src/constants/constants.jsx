@@ -7,3 +7,12 @@ export const FETCH = {
   error: null
 };
 export const API = 'https://api.myjson.com/bins/srqyx';
+
+export const INITIAL_STATE = {
+  turn: PLAYERX,
+  values: VALUES,
+  numberMovements: 0,
+  winner: '',
+  lastSavedGameUrl: '',
+  savedGames: []
+};
