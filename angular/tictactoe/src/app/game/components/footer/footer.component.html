@@ -1,8 +1,9 @@
-<p><strong>Number of movements:</strong> {{ (stateService.state$ | async).numberMovements }}</p>
-<button
-  class="btn"
-  [class.disabled]="(stateService.state$ | async).numberMovements === 0"
-  (click)="resetGame()"
->
+<p><strong>Number of movements:</strong> {{ numberMovements }}</p>
+<button class="btn" [class.disabled]="numberMovements === 0" (click)="resetGame()">
   Reset game
 </button>
+<form>
+  <input type="text" name="gameName" placeholder="Game Name" [(ngModel)]="gameName" />
+  <button type="submit" (click)="handleSubmitClick()">Save Game</button>
+</form>
+<p>{{ message }}</p>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { State } from '../game.models';
+import { State, SavedGame } from '../game.models';
 import { BehaviorSubject } from 'rxjs';
-import { Router } from '@angular/router';
+import { HttpService } from 'src/app/services/http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +9,15 @@ import { Router } from '@angular/router';
 export class StateService {
   state$: BehaviorSubject<State>;
 
-  constructor() {
+  constructor(private httpService: HttpService) {
     const initialState = {
       turn: 'PLAYERX',
       values: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
       numberMovements: 0,
       winner: '',
-      playerName: ''
+      playerName: '',
+      lastSavedGameUrl: '',
+      savedGames: []
     };
 
     this.state$ = new BehaviorSubject(initialState);
@@ -48,7 +50,9 @@ export class StateService {
         values: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
         numberMovements: 0,
         winner: '',
-        playerName: ''
+        playerName: '',
+        lastSavedGameUrl: this.state.lastSavedGameUrl,
+        savedGames: this.state.savedGames
       };
     }
   }
@@ -113,5 +117,49 @@ export class StateService {
       return 'TIE';
     }
     return '';
+  }
+
+  saveGame(gameName: string) {
+    const gameInfo = {
+      turn: this.state.turn,
+      values: this.state.values,
+      numberMovements: this.state.numberMovements,
+      winner: this.state.winner,
+      playerName: this.state.playerName
+    };
+    this.httpService.saveGame(gameInfo).subscribe(response => {
+      const savedGame = {
+        id: Date.now(),
+        name: gameName,
+        url: response.uri
+      };
+      this.state.savedGames.push(savedGame);
+      this.state.lastSavedGameUrl = response.uri;
+    });
+  }
+
+  continueGame(id: number) {
+    const savedGame = this.state.savedGames.find(game => game.id === id);
+    if (savedGame) {
+      return this.httpService.getSavedGame(savedGame.url);
+    } else {
+      return null;
+    }
+  }
+
+  deleteGame(id: number) {
+    const savedGame = this.state.savedGames.find(game => game.id === id);
+    if (savedGame) {
+      if (savedGame.url === this.state.lastSavedGameUrl) {
+        const index = this.state.savedGames.indexOf(savedGame);
+        if (index > 0) {
+          this.state.lastSavedGameUrl = this.state.savedGames[index - 1].url;
+        } else {
+          this.state.lastSavedGameUrl = '';
+        }
+      }
+      const filteredGames = this.state.savedGames.filter(game => game.id !== id);
+      this.state.savedGames = [...filteredGames];
+    }
   }
 }

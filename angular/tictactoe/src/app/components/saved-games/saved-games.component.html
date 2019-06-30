@@ -1,0 +1,8 @@
+<ul>
+  <li *ngIf="(stateService.state$ | async).savedGames.length === 0">
+    There are no saved games yet.
+  </li>
+  <li *ngFor="let savedGame of (stateService.state$ | async).savedGames">
+    <app-saved-game [savedGame]="savedGame"></app-saved-game>
+  </li>
+</ul>

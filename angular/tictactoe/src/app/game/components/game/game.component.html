@@ -1,8 +1,8 @@
 <div class="loader" *ngIf="status === 'fetching'"></div>
 <div *ngIf="status === 'success'">
-  <form *ngIf="(stateService.state$ | async).playerName === ''">
+  <form *ngIf="(stateService.state$ | async).playerName === ''" (submit)="handleSubmitClick()">
     <input type="text" name="playerName" placeholder="Player Name" [(ngModel)]="playerName" />
-    <button type="submit" (click)="handleSubmitClick()">Submit</button>
+    <button type="submit">Submit</button>
   </form>
 
   <div *ngIf="(stateService.state$ | async).playerName !== ''">

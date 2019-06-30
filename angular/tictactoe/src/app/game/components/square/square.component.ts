@@ -9,8 +9,11 @@ import { StateService } from '../../services/state.service';
 export class SquareComponent implements OnInit {
   @Input() row: number;
   @Input() column: number;
+  stateService: StateService;
 
-  constructor(private stateService: StateService) {}
+  constructor(stateService: StateService) {
+    this.stateService = stateService;
+  }
 
   ngOnInit() {}
 
